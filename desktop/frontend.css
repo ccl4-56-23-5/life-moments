@@ -1,0 +1,238 @@
+:root{color-scheme:light dark}
+#photoindex-desktop{--bg:light-dark(#fbfbfd,#141417);--surface:light-dark(#f2f2f7,#232328);--text:light-dark(#202125,#f5f5f7);--muted:light-dark(#7c7d85,#a1a1aa);--line:light-dark(#e7e7ec,#34343b);--selected:light-dark(#e7f1ff,#233b58);--blue:light-dark(#007aff,#65adff);--button:light-dark(#007aff,#328bfa);--onbutton:#fff;--hover:light-dark(#ededf2,#2c2c33);--glass:light-dark(#f8f8fbe8,#1a1a20e8);--card:light-dark(#fff,#202026);--shadow:light-dark(#2428420b,#0003);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI Variable','Segoe UI','Microsoft YaHei',sans-serif;font-size:14px;line-height:1.55;letter-spacing:.05px;background:var(--bg);-webkit-font-smoothing:antialiased}
+#photoindex-desktop button{border-radius:12px;padding:10px 15px;gap:8px;font-weight:500;transition:background .18s,box-shadow .18s,color .18s,transform .18s}
+#photoindex-desktop button:active:not(:disabled){transform:scale(.97)}
+#photoindex-desktop button:focus-visible,#photoindex-desktop input:focus-visible,#photoindex-desktop textarea:focus-visible,#photoindex-desktop select:focus-visible{outline:3px solid color-mix(in srgb,var(--button) 40%,transparent);outline-offset:3px}
+#photoindex-desktop svg.lucide{width:19px;height:19px;stroke-width:1.85}
+#photoindex-desktop .iconbutton{width:38px;height:38px;padding:9px;border-radius:11px}
+#photoindex-desktop .primary{box-shadow:0 3px 10px #007aff1c}
+#photoindex-desktop .primary:hover{filter:brightness(1.04)}
+#photoindex-desktop h1{font-size:32px;line-height:1.25;font-weight:650;letter-spacing:-.6px}
+#photoindex-desktop h2{font-size:18px;font-weight:600;letter-spacing:-.15px}
+#photoindex-desktop .topbar{height:82px;padding:17px 28px 17px 24px;gap:22px;background:var(--glass);border-bottom:1px solid var(--line);backdrop-filter:blur(28px) saturate(1.4);position:sticky;top:0;z-index:20}
+#photoindex-desktop .brand{min-width:188px;gap:11px;font-size:20px;font-weight:650;letter-spacing:-.35px;white-space:nowrap}
+#photoindex-desktop .brandmark{width:34px;height:34px;background:transparent;color:var(--button);flex-shrink:0}
+#photoindex-desktop .brandmark svg{width:23px;height:23px;stroke-width:1.8}
+#photoindex-desktop .brandmark img{width:100%;height:100%;display:block;object-fit:contain}
+#photoindex-desktop .brand .beta-badge{font-size:10px;font-weight:600;letter-spacing:.15px;padding:2px 6px;border-radius:6px;background:var(--selected);color:var(--blue);margin-left:-4px}
+#photoindex-desktop .searchbox{max-width:590px;height:42px;border-radius:12px;padding:0 14px;gap:9px;background:light-dark(#eaeaef,#2c2c34);box-shadow:inset 0 1px 1px #00000003;transition:box-shadow .18s}
+#photoindex-desktop .searchbox:focus-within{box-shadow:0 0 0 3px color-mix(in srgb,var(--button) 15%,transparent)}
+#photoindex-desktop .searchbox>svg{color:var(--muted);width:18px;height:18px}
+#photoindex-desktop .searchbox input{font-size:13px;padding:9px 0;line-height:1.4}
+#photoindex-desktop .searchbox input::placeholder{color:var(--muted)}
+#photoindex-desktop .topactions{align-items:center;gap:6px;flex-shrink:0}
+#photoindex-desktop .topactions>[data-action=refresh]{font-size:12px;padding:9px 11px;color:var(--blue);border:1px solid var(--line);background:var(--card)}
+#photoindex-desktop .workspace{grid-template-columns:216px minmax(0,1fr);min-height:calc(100dvh - 82px);align-items:start}
+#photoindex-desktop .sidebar{background:var(--glass);border-right:1px solid var(--line);padding:25px 15px 20px;gap:30px;position:sticky;top:82px;height:calc(100dvh - 82px);overflow-y:auto;backdrop-filter:blur(22px);align-self:start}
+#photoindex-desktop .navigation{gap:7px}
+#photoindex-desktop .navigation button{gap:12px;padding:12px 15px;border-radius:12px;font-size:14px;font-weight:500}
+#photoindex-desktop .navigation button svg{color:var(--muted)}
+#photoindex-desktop .navigation button[aria-current=page]{background:var(--selected);color:var(--blue);font-weight:600}
+#photoindex-desktop .navigation button[aria-current=page] svg{color:var(--blue)}
+#photoindex-desktop .sidesection{margin:0 13px 13px;letter-spacing:.4px;font-size:10px;font-weight:600}
+#photoindex-desktop .source{margin:0 13px;gap:7px;font-size:12px}
+#photoindex-desktop .source span{gap:8px}
+#photoindex-desktop .source svg{width:16px;height:16px;color:var(--muted)}
+#photoindex-desktop .source small{font-size:11px;line-height:1.75}
+#photoindex-desktop .sidefooter{padding:15px 0 0;gap:5px}
+#photoindex-desktop .sidefooter button{padding:10px 13px;border-radius:10px;font-size:12px;color:var(--muted)}
+#photoindex-desktop .main{padding:32px 38px 64px;min-width:0;background:var(--bg)}
+#photoindex-desktop .pagehead{margin-bottom:25px;gap:18px}
+#photoindex-desktop .pagehead .subtitle{font-size:12px;margin-top:8px}
+#photoindex-desktop .segments{padding:3px;gap:2px;border:0;border-radius:11px;background:light-dark(#e9e9ee,#2c2c33);box-shadow:inset 0 0 0 1px #00000002;flex-shrink:0}
+#photoindex-desktop .segments button{font-size:12px;font-weight:550;min-width:43px;padding:6px 13px;border-radius:8px;color:var(--muted)}
+#photoindex-desktop .segments button[aria-pressed=true]{background:var(--card);color:var(--text);box-shadow:0 1px 4px #00000015}
+#photoindex-desktop .timeline-tools{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+#photoindex-desktop .timeline-toolbar{display:flex;align-items:center;justify-content:center;gap:12px;position:sticky;top:calc(var(--topbar-height,82px) + 12px);z-index:8;width:max-content;max-width:100%;background:var(--glass);border:1px solid light-dark(#ffffffdf,#ffffff18);border-radius:20px;padding:6px 9px 6px 14px;margin:0 auto 22px;backdrop-filter:blur(24px) saturate(1.4);box-shadow:0 7px 25px light-dark(#24284213,#0004),0 0 0 1px var(--line)}
+#photoindex-desktop .timeline-nav{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#photoindex-desktop .timeline-jump,#photoindex-desktop .year-picker{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);white-space:nowrap}
+#photoindex-desktop .timeline-jump select,#photoindex-desktop .year-picker select,#photoindex-desktop #timeline-year,#photoindex-desktop #timeline-month{width:auto;max-width:140px;padding:7px 29px 7px 10px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);font-size:12px;line-height:1.4;cursor:pointer}
+#photoindex-desktop .timeline-count{font-size:11px;color:var(--muted);font-weight:400;white-space:nowrap;font-variant-numeric:tabular-nums}
+#photoindex-desktop .timeline-count .scan-line{position:absolute;top:calc(100% + 7px);left:0;right:0;justify-content:center;margin:0;font-size:10px;min-height:0;border-radius:9px;background:var(--glass);overflow:hidden;text-overflow:ellipsis}
+#photoindex-desktop .timeline-section{scroll-margin-top:calc(var(--topbar-height,82px) + 70px)}
+#photoindex-desktop .timeline-section .grouphead{margin:27px 0 12px;justify-content:space-between;gap:12px}
+#photoindex-desktop .timeline-section .grouphead h2{font-size:17px;font-weight:600;letter-spacing:-.2px}
+#photoindex-desktop .timeline-section .grouphead small{font-size:11px;font-weight:400}
+#photoindex-desktop .timeline-end{color:var(--muted);font-size:11px;text-align:center;margin-top:40px;padding:20px 0}
+#photoindex-desktop .grouphead{margin:26px 0 13px;gap:12px}
+#photoindex-desktop .scan-line{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:9px;min-height:22px;margin:-13px 0 20px}
+#photoindex-desktop .scan-line:empty{display:none}
+#photoindex-desktop .scan-spinner{width:14px;height:14px;border:2px solid var(--selected);border-top-color:var(--button);border-radius:50%;animation:desktop-spin .9s linear infinite}
+#photoindex-desktop [data-action=refresh].is-loading svg,#photoindex-desktop [data-action=sync-now] .lucide-loader-circle{animation:desktop-spin 1.2s linear infinite}
+#photoindex-desktop .sync-controls{display:flex;align-items:center;gap:4px;position:relative;padding:0 5px}
+#photoindex-desktop .sync-controls .sync-toggle{font-size:11px;font-weight:500;gap:7px;padding:9px 4px}
+#photoindex-desktop .switch-track{width:30px;height:18px;border-radius:20px;background:light-dark(#c8c8d0,#5b5b65);padding:3px;display:block;box-shadow:inset 0 0 0 1px #00000004;transition:background .2s;flex-shrink:0}
+#photoindex-desktop .switch-track span{display:block;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 1px 3px #0002;transition:transform .2s}
+#photoindex-desktop .sync-toggle[aria-checked=true] .switch-track{background:#34c759}
+#photoindex-desktop .sync-toggle[aria-checked=true] .switch-track span{transform:translateX(12px)}
+#photoindex-desktop .sync-status{font-size:9px;color:var(--muted);position:absolute;top:35px;left:12px;white-space:nowrap}
+#photoindex-desktop .settings-sync-slot .sync-controls{padding-left:0;margin:6px 0 15px;justify-content:flex-start}
+#photoindex-desktop .settings-sync-slot .sync-toggle{font-size:12px}
+#photoindex-desktop .settings-sync-slot .sync-status{left:8px}
+#photoindex-desktop .photo-grid{gap:10px;margin-bottom:25px}
+#photoindex-desktop .photo-tile{border-radius:12px;background:var(--surface);padding:0;overflow:hidden;box-shadow:0 1px 3px var(--shadow)}
+#photoindex-desktop .photo-tile img{object-fit:contain;object-position:center;animation:desktop-reveal .25s ease-out}
+#photoindex-desktop .photo-tile:hover{background:var(--surface);box-shadow:0 2px 7px #0000000d}
+#photoindex-desktop .photo-tile:hover img{filter:brightness(.98)}
+#photoindex-desktop .photo-tile:focus-visible{outline:none}
+#photoindex-desktop .photo-tile:focus-visible::after{content:"";position:absolute;inset:3px;border:1px solid #fff;border-radius:9px;box-shadow:0 0 0 1px #007aff99;pointer-events:none;z-index:2}
+#photoindex-desktop .natural-grid{display:block;grid-template-columns:none;gap:0;margin-bottom:0;min-width:0}
+#photoindex-desktop .natural-grid .photo-row{display:flex;align-items:stretch;gap:10px;margin-bottom:10px;min-width:0;content-visibility:auto;contain-intrinsic-size:auto 205px}
+#photoindex-desktop .natural-grid .photo-tile,#photoindex-desktop .natural-grid .photo-tile[data-orientation=portrait]{display:block;height:100%;aspect-ratio:auto;flex-grow:0;flex-shrink:0;min-width:0;border:0;border-radius:12px;content-visibility:visible;contain-intrinsic-size:none}
+#photoindex-desktop .natural-grid .photo-tile img{width:100%;height:100%;object-fit:contain;object-position:center;opacity:0;transition:opacity .2s;animation:none}
+#photoindex-desktop .natural-grid .photo-tile img.is-ready{opacity:1}
+#photoindex-desktop .natural-grid .photo-tile.unavailable img{opacity:1}
+#photoindex-desktop .photo-tile .tagdot{bottom:8px;right:8px;background:#22252ca6;backdrop-filter:blur(12px);border:1px solid #ffffff25;padding:4px 7px;border-radius:16px;gap:4px;box-shadow:0 1px 5px #0001}
+#photoindex-desktop .photo-tile.unavailable{border:1px solid var(--line);box-shadow:none}
+#photoindex-desktop .album-grid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:27px 21px}
+#photoindex-desktop .album-card{border-radius:17px;padding:10px;background:var(--card);border:1px solid var(--line);box-shadow:0 2px 8px var(--shadow);text-align:left}
+#photoindex-desktop .album-card:hover{background:var(--card);box-shadow:0 5px 18px #00000010;transform:translateY(-2px)}
+#photoindex-desktop .album-card img{border-radius:11px;aspect-ratio:1.17}
+#photoindex-desktop .album-card .title{margin:13px 4px 0;font-size:15px;font-weight:600;letter-spacing:-.1px}
+#photoindex-desktop .album-card .summary{margin:4px 4px 6px;font-size:12px}
+#photoindex-desktop .album-note{padding:0 0 26px;font-size:14px;line-height:1.85}
+#photoindex-desktop .person-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:18px}
+#photoindex-desktop .person-card{gap:9px;padding:24px 16px 20px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:0 2px 8px var(--shadow);font-size:15px;font-weight:600;min-height:202px}
+#photoindex-desktop .person-card:hover{background:var(--card);transform:translateY(-2px);box-shadow:0 5px 18px #00000010}
+#photoindex-desktop .person-avatar{width:88px;height:88px;font-size:31px;font-weight:500;background:var(--selected);box-shadow:0 0 0 4px var(--card),0 3px 12px #0000000a;margin-bottom:3px}
+#photoindex-desktop .person-card small{font-size:11px;font-weight:400}
+#photoindex-desktop .person-tags{gap:5px;margin-top:1px}
+#photoindex-desktop .person-tag{font-size:10px;font-weight:500;padding:3px 8px;border-radius:7px}
+#photoindex-desktop .person-header{gap:22px;margin-bottom:34px}
+#photoindex-desktop .person-header .person-avatar{width:90px;height:90px;margin:0}
+#photoindex-desktop .person-actions{gap:5px}
+#photoindex-desktop .page-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+#photoindex-desktop .page-back{padding:7px 0;margin:0 0 17px;font-size:12px;color:var(--blue);gap:5px}
+#photoindex-desktop .page-back:hover{background:transparent;color:var(--text)}
+#photoindex-desktop .page-back svg{width:17px;height:17px}
+#photoindex-desktop .sort-button,#photoindex-desktop .manage-button{font-size:12px;padding:9px 12px;border:1px solid var(--line);background:var(--card)}
+#photoindex-desktop .manage-button[aria-pressed=true]{background:var(--selected);color:var(--blue);border-color:color-mix(in srgb,var(--button) 20%,var(--line))}
+#photoindex-desktop .album-item{position:relative;min-width:0}
+#photoindex-desktop .album-item .album-card{width:100%;height:100%}
+#photoindex-desktop .album-remove{position:absolute;top:20px;right:20px;background:#fffef4;color:#ff453a;border:1px solid #fff9;box-shadow:0 2px 12px #0002;z-index:2;border-radius:50%}
+#photoindex-desktop .album-remove:hover{background:#fff0ef;color:#e02d24}
+#photoindex-desktop .album-empty-cover{aspect-ratio:1.17;border-radius:11px;display:grid;place-items:center;background:var(--surface);color:var(--blue)}
+#photoindex-desktop .album-empty-cover svg{width:45px;height:45px;stroke-width:1.3}
+#photoindex-desktop dialog .delete-album-name{font-size:17px;font-weight:600;overflow-wrap:anywhere;margin:0 0 12px}
+#photoindex-desktop .danger-button{background:#ff453a;box-shadow:none;color:#fff}
+#photoindex-desktop .sort-options{display:grid;gap:4px}
+#photoindex-desktop .sort-options label{display:flex;align-items:center;gap:11px;margin:0;padding:12px;border-radius:11px;cursor:pointer;font-size:13px}
+#photoindex-desktop .sort-options label:has(input:checked){background:var(--selected);color:var(--blue)}
+#photoindex-desktop .sort-options input{width:17px;height:17px;padding:0;margin:0;accent-color:var(--button)}
+#photoindex-desktop .person-actions button{font-size:12px;border:1px solid var(--line);background:var(--card)}
+#photoindex-desktop .tagfilters{gap:8px;margin-bottom:24px}
+#photoindex-desktop .tagfilters button{padding:7px 13px;border-radius:10px;font-size:12px;background:var(--card)}
+#photoindex-desktop .tagfilters button[aria-pressed=true]{border-color:color-mix(in srgb,var(--button) 20%,var(--line))}
+#photoindex-desktop .empty{padding:90px 20px}
+#photoindex-desktop .empty h2{font-size:19px;font-weight:550;margin:20px 0}
+#photoindex-desktop .empty>svg{width:46px;height:46px;stroke-width:1.2;color:light-dark(#b6b6c0,#777783)}
+#photoindex-desktop .mapbox,#photoindex-desktop .location-preview,#photoindex-desktop .location-editor-map{border-radius:16px;border:1px solid var(--line);box-shadow:0 2px 10px var(--shadow)}
+#photoindex-desktop .mapcontrols,#photoindex-desktop .maplibregl-ctrl-group{border-radius:12px;overflow:hidden;box-shadow:0 3px 15px #0000001c}
+#photoindex-desktop .map-status{border:1px solid var(--line);border-radius:10px;background:var(--glass);backdrop-filter:blur(15px)}
+#photoindex-desktop .places button{border-radius:10px;font-size:12px;padding:8px 13px;background:var(--card)}
+#photoindex-desktop .maplibregl-popup-content{border-radius:17px;box-shadow:0 8px 30px #0003}
+#photoindex-desktop .viewer{background:#0c0d11}
+#photoindex-desktop .viewerbar{height:72px;background:#15161ddd;backdrop-filter:blur(22px);border-bottom:1px solid #ffffff0b;gap:14px;padding:14px 22px}
+#photoindex-desktop .viewerbar .viewertitle{font-size:12px;color:#b7b8c2;letter-spacing:.15px}
+#photoindex-desktop .viewerbar .viewertools{gap:7px}
+#photoindex-desktop .viewerbar .viewertools .textbutton{color:#a5ccff;font-size:12px;background:#ffffff08;border-radius:11px;padding:9px 12px}
+#photoindex-desktop .viewerbar button[aria-pressed=true]{background:#007aff28;color:#a5ccff}
+#photoindex-desktop .viewerbody{grid-template-columns:minmax(0,1fr) 336px;min-height:calc(100dvh - 72px)}
+#photoindex-desktop .canvas{height:calc(100dvh - 72px);max-height:none;min-height:460px;background:radial-gradient(ellipse at 48% 46%,#171923,#0c0d11 75%)}
+#photoindex-desktop .photo-viewport{inset:27px 60px 100px}
+#photoindex-desktop .photo-viewport img{border-radius:4px;object-fit:contain;box-shadow:0 8px 60px #0003}
+#photoindex-desktop .image-nav{background:#ffffff12;border:1px solid #ffffff15;backdrop-filter:blur(18px);color:#e8e9ed;border-radius:50%;width:38px;height:38px}
+#photoindex-desktop .image-nav.previous{left:14px}
+#photoindex-desktop .image-nav.next{right:14px}
+#photoindex-desktop .zoomtools{background:#272831c9;backdrop-filter:blur(18px);border:1px solid #ffffff14;border-radius:14px;padding:4px;bottom:48px;box-shadow:0 4px 18px #0002}
+#photoindex-desktop .zoomtools button{border-radius:10px;width:35px;height:35px;padding:8px}
+#photoindex-desktop .zoomtools .zoomlevel{font-size:11px;min-width:44px;font-variant-numeric:tabular-nums}
+#photoindex-desktop .viewer-count{color:#7f818e;font-size:11px;bottom:17px;font-variant-numeric:tabular-nums}
+#photoindex-desktop .infopanel{background:var(--card);padding:25px 24px;max-height:calc(100dvh - 72px);border-left:1px solid var(--line)}
+#photoindex-desktop .infoheading{margin-bottom:20px}
+#photoindex-desktop .infoheading h2{font-size:20px;font-weight:650;letter-spacing:-.3px}
+#photoindex-desktop .infosection{padding:20px 0}
+#photoindex-desktop .sectionheading{margin-bottom:12px}
+#photoindex-desktop .sectionheading h3{font-size:12px;font-weight:600;color:var(--muted)}
+#photoindex-desktop .sectionheading button{font-size:12px;padding:4px 6px}
+#photoindex-desktop .personchip{border-radius:18px;background:var(--surface);padding:4px 5px 4px 4px;gap:5px;font-size:12px}
+#photoindex-desktop .personchip .person-avatar{width:28px;height:28px;font-size:12px;margin:0;box-shadow:none}
+#photoindex-desktop .personchip .avatar-edit{width:auto;height:auto;padding:0 4px 0 0;gap:7px;white-space:nowrap;font-size:12px}
+#photoindex-desktop .noteinput{border:1px solid var(--line);background:var(--surface);border-radius:11px;padding:12px;font-size:12px;line-height:1.7;min-height:96px}
+#photoindex-desktop .infoitem{gap:11px;font-size:12px;margin-bottom:19px}
+#photoindex-desktop .infoitem strong{font-weight:500;line-height:1.6}
+#photoindex-desktop .infoitem small{font-size:10px;margin-top:4px}
+#photoindex-desktop .album-chip{font-size:11px;border-radius:9px;padding:6px 9px;background:var(--surface)}
+#photoindex-desktop .photo-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:10px;color:#e8eaed;background:#252732c9;backdrop-filter:blur(15px);padding:12px 18px;border:1px solid #ffffff12;border-radius:16px;font-size:12px;pointer-events:none}
+#photoindex-desktop dialog{background:var(--card);border:1px solid light-dark(#ffffffc9,#ffffff12);border-radius:23px;padding:28px;width:440px;box-shadow:0 18px 80px #00000025,0 2px 10px #00000010;max-height:calc(100dvh - 52px)}
+#photoindex-desktop dialog::backdrop{background:#24263455;backdrop-filter:blur(5px)}
+#photoindex-desktop dialog h2{font-size:24px;font-weight:650;letter-spacing:-.4px;margin-bottom:23px}
+#photoindex-desktop dialog label{font-size:12px;font-weight:500;margin:18px 0 8px}
+#photoindex-desktop dialog input,#photoindex-desktop dialog textarea,#photoindex-desktop dialog select{border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:11px 13px;font-size:13px;line-height:1.5}
+#photoindex-desktop dialog input:focus-visible{outline:3px solid color-mix(in srgb,var(--button) 20%,transparent);outline-offset:0;border-color:var(--button)}
+#photoindex-desktop .dialoghint{font-size:11px;line-height:1.8;color:var(--muted);margin:12px 0 0}
+#photoindex-desktop .dialogactions{gap:8px;margin-top:28px}
+#photoindex-desktop .dialogactions button{min-width:76px;padding:9px 17px;border-radius:11px;font-size:13px}
+#photoindex-desktop .dialogactions .textbutton{background:var(--surface)}
+#photoindex-desktop .existingpeople button{font-size:12px;padding:8px 12px;border-radius:10px;background:var(--surface)}
+#photoindex-desktop .choice-list label{padding:12px 10px;border-radius:10px;font-size:13px}
+#photoindex-desktop .choice-list label:hover{background:var(--surface)}
+#photoindex-desktop .choice-list input{width:18px;height:18px;border-radius:5px;padding:0}
+#photoindex-desktop dialog.wide-dialog{width:710px}
+#photoindex-desktop .crop-sources{gap:9px;padding:2px 2px 8px;margin-bottom:12px}
+#photoindex-desktop .crop-sources button{width:70px;height:60px;border-radius:11px;padding:3px}
+#photoindex-desktop .crop-sources img{border-radius:7px;object-fit:contain;background:var(--surface)}
+#photoindex-desktop .crop-stage{border-radius:15px;background:#11131a;height:320px}
+#photoindex-desktop .crop-square{border-radius:2px;box-shadow:0 0 0 2000px #0008}
+#photoindex-desktop .crop-footer{gap:22px;margin-top:21px}
+#photoindex-desktop .crop-footer canvas{width:78px;height:78px;box-shadow:0 2px 8px #00000012}
+#photoindex-desktop .crop-footer label{font-size:12px}
+#photoindex-desktop .snackbar{border-radius:15px;background:light-dark(#292b34e8,#eeeff5ed);color:light-dark(#fff,#202125);padding:12px 21px;font-size:12px;box-shadow:0 6px 25px #0002;backdrop-filter:blur(18px);z-index:40}
+#photoindex-desktop ::-webkit-scrollbar{width:7px;height:7px}
+#photoindex-desktop ::-webkit-scrollbar-thumb{background:light-dark(#c9c9d3,#4a4a55);border-radius:7px;border:2px solid transparent;background-clip:padding-box}
+#photoindex-desktop ::-webkit-scrollbar-track{background:transparent}
+@keyframes desktop-spin{to{transform:rotate(360deg)}}
+@keyframes desktop-reveal{from{opacity:0}to{opacity:1}}
+@media(min-width:1440px){#photoindex-desktop .main{padding:37px 48px 64px}#photoindex-desktop .workspace{grid-template-columns:232px minmax(0,1fr)}#photoindex-desktop .brand{min-width:204px}}
+@media(max-width:1100px){#photoindex-desktop .topbar{padding:16px 20px;gap:15px}#photoindex-desktop .brand{min-width:165px;font-size:18px;gap:9px}#photoindex-desktop .workspace{grid-template-columns:192px minmax(0,1fr)}#photoindex-desktop .main{padding:30px 28px 56px}#photoindex-desktop .sidebar{padding:23px 12px 18px}#photoindex-desktop .topactions{gap:3px}#photoindex-desktop .sync-controls{padding:0}#photoindex-desktop .timeline-toolbar{gap:12px}#photoindex-desktop .viewerbody{grid-template-columns:minmax(0,1fr) 305px}#photoindex-desktop .infopanel{padding:24px 21px}}
+@media(max-width:900px){#photoindex-desktop .topbar{gap:11px;padding:15px 17px}#photoindex-desktop .brand{min-width:150px;font-size:17px;gap:7px}#photoindex-desktop .brandmark{width:30px;height:30px}#photoindex-desktop .brand .beta-badge{font-size:9px;padding:2px 4px}#photoindex-desktop .workspace{grid-template-columns:175px minmax(0,1fr)}#photoindex-desktop .sidebar{padding:23px 11px 18px}#photoindex-desktop .navigation button{padding:11px 12px;gap:10px;font-size:13px}#photoindex-desktop .main{padding:28px 24px 50px}#photoindex-desktop .topactions>[data-action=refresh]{padding:9px;font-size:11px;gap:6px}#photoindex-desktop .sync-controls .sync-toggle{font-size:10px;gap:5px}#photoindex-desktop .timeline-toolbar{padding:12px;gap:10px}#photoindex-desktop .timeline-tools{gap:11px}#photoindex-desktop .timeline-nav{gap:7px}#photoindex-desktop .viewerbar .viewertitle{max-width:30%}#photoindex-desktop .viewerbar .viewertools{gap:3px}}
+@media(max-width:680px){#photoindex-desktop .topbar{height:auto;min-height:74px;flex-wrap:wrap;padding:13px 15px;gap:10px}#photoindex-desktop .brand{min-width:0;flex:1;font-size:18px;gap:9px}#photoindex-desktop .brandmark{display:grid;width:30px;height:30px}#photoindex-desktop .searchbox{order:3;flex-basis:100%;max-width:none;height:38px}#photoindex-desktop .topactions{margin-left:auto}#photoindex-desktop .topactions button:first-child{display:inline-flex}#photoindex-desktop .topactions>[data-action=refresh]{font-size:0;gap:0;width:34px;height:34px;padding:8px}#photoindex-desktop .topactions>[data-action=refresh]>span{display:none}#photoindex-desktop .topactions .iconbutton{width:34px;height:34px;padding:8px}#photoindex-desktop .sync-controls .sync-toggle{font-size:10px;padding:8px 3px}#photoindex-desktop .sync-status{display:none}#photoindex-desktop .settings-sync-slot .sync-status{display:block}#photoindex-desktop .workspace{display:block;min-height:calc(100dvh - 112px)}#photoindex-desktop .sidebar{position:relative;top:auto;height:auto;padding:9px 11px;border-right:0;border-bottom:1px solid var(--line);gap:0;overflow:visible}#photoindex-desktop .navigation{grid-template-columns:repeat(4,minmax(0,1fr));gap:4px}#photoindex-desktop .navigation button{padding:10px 5px;justify-content:center;gap:6px;font-size:12px;border-radius:10px}#photoindex-desktop .navigation svg{width:16px;height:16px}#photoindex-desktop .main{padding:27px 17px 42px}#photoindex-desktop h1{font-size:29px}#photoindex-desktop .pagehead{gap:14px;margin-bottom:23px}#photoindex-desktop .timeline-toolbar{top:112px;padding:10px 12px;gap:10px;margin-bottom:23px}#photoindex-desktop .timeline-section{scroll-margin-top:198px}#photoindex-desktop .timeline-nav{gap:8px}#photoindex-desktop .timeline-jump{gap:5px;font-size:11px}#photoindex-desktop .timeline-jump select,#photoindex-desktop #timeline-year,#photoindex-desktop #timeline-month{font-size:11px;padding:7px 17px 7px 8px}#photoindex-desktop .segments button{font-size:11px;min-width:35px;padding:6px 10px}#photoindex-desktop .album-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}#photoindex-desktop .album-card{padding:8px;border-radius:15px}#photoindex-desktop .album-card .title{font-size:13px;margin:11px 2px 0}#photoindex-desktop .album-card .summary{font-size:10px;margin:4px 2px}#photoindex-desktop .person-grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:13px}#photoindex-desktop .person-card{padding:21px 12px 17px;font-size:14px;min-height:186px}#photoindex-desktop .person-avatar{width:78px;height:78px;font-size:27px}#photoindex-desktop .person-header{gap:18px;margin-bottom:25px}#photoindex-desktop .person-actions{margin-left:0}#photoindex-desktop .viewerbody{display:block}#photoindex-desktop .canvas{height:calc(64dvh - 72px);min-height:350px}#photoindex-desktop .viewerbody.info-hidden .canvas{height:calc(100dvh - 72px)}#photoindex-desktop .infopanel{max-height:none;border-left:0;border-top:1px solid var(--line);padding:24px}#photoindex-desktop .viewerbar{gap:5px;padding:12px;height:72px}#photoindex-desktop .viewerbar .viewertitle{display:none}#photoindex-desktop .viewerbar .viewertools{gap:3px}#photoindex-desktop .viewerbar .viewertools .textbutton{padding:8px 9px;font-size:11px}#photoindex-desktop .photo-viewport{inset:16px 43px 98px}#photoindex-desktop .image-nav{width:32px;height:32px;padding:7px}#photoindex-desktop .image-nav.previous{left:7px}#photoindex-desktop .image-nav.next{right:7px}#photoindex-desktop dialog{padding:25px 22px;border-radius:21px}#photoindex-desktop .crop-stage{height:280px}}
+@media(max-width:390px){#photoindex-desktop .brand{font-size:16px;gap:6px}#photoindex-desktop .brandmark{width:27px;height:27px}#photoindex-desktop .topbar{padding:12px;gap:7px}#photoindex-desktop .topactions{gap:1px}#photoindex-desktop .sync-controls .sync-toggle{gap:4px}#photoindex-desktop .sync-controls .sync-toggle>span:not(.switch-track){font-size:9px}#photoindex-desktop .main{padding:25px 13px 38px}#photoindex-desktop .person-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#photoindex-desktop .timeline-toolbar{padding:9px}#photoindex-desktop .timeline-count{font-size:11px}#photoindex-desktop .viewerbar .viewertools .textbutton{padding:8px 7px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){#photoindex-desktop .main,#photoindex-desktop .photo-tile img{animation:none}#photoindex-desktop .scan-spinner{animation-duration:2.5s}#photoindex-desktop button{transition:none}#photoindex-desktop .album-card:hover,#photoindex-desktop .person-card:hover,#photoindex-desktop button:active:not(:disabled){transform:none}}
+
+/* The timeline controls float as a compact island at every desktop window size. */
+#photoindex-desktop .timeline-toolbar{padding:6px 9px 6px 14px;gap:12px;top:calc(var(--topbar-height,82px) + 12px);margin-bottom:22px;flex-wrap:nowrap}
+#photoindex-desktop .timeline-toolbar .timeline-nav{gap:6px;flex-wrap:nowrap}
+#photoindex-desktop .timeline-toolbar select,#photoindex-desktop .timeline-toolbar #timeline-year,#photoindex-desktop .timeline-toolbar #timeline-month{font-size:11px;line-height:1.4;padding:5px 21px 5px 8px;border-radius:10px;background:transparent;border-color:transparent}
+#photoindex-desktop .timeline-toolbar select:hover{background:var(--card)}
+#photoindex-desktop .timeline-toolbar .segments{padding:3px;border-radius:12px}
+#photoindex-desktop .timeline-toolbar .segments button{min-width:30px;padding:4px 9px;border-radius:9px;font-size:11px;transition:background .24s cubic-bezier(.22,1,.36,1),color .24s cubic-bezier(.22,1,.36,1),box-shadow .24s cubic-bezier(.22,1,.36,1)}
+@media(max-width:680px){#photoindex-desktop .timeline-toolbar{gap:8px;padding:6px 7px 6px 10px}#photoindex-desktop .timeline-toolbar .timeline-nav{gap:3px}#photoindex-desktop .timeline-toolbar .timeline-count{font-size:10px}#photoindex-desktop .timeline-toolbar .segments button{padding:4px 7px;min-width:26px}}
+@media(prefers-reduced-motion:reduce){#photoindex-desktop .timeline-toolbar .segments button{transition:none}}
+
+/* Common language for desktop and mobile controls, settings and expanded photo information. */
+#photoindex-desktop{--control-radius:12px;--card-radius:18px;--ease:cubic-bezier(.22,1,.36,1)}
+#photoindex-desktop button{border-radius:var(--control-radius);transition:background .18s var(--ease),box-shadow .18s var(--ease),color .18s var(--ease),transform .18s var(--ease)}
+#photoindex-desktop .searchbox,#photoindex-desktop .switch-track,#photoindex-desktop .switch-track span,#photoindex-desktop .natural-grid .photo-tile img{transition-timing-function:var(--ease)}
+#photoindex-desktop .album-card,#photoindex-desktop .person-card{border-radius:var(--card-radius)}
+#photoindex-desktop dialog input,#photoindex-desktop dialog textarea,#photoindex-desktop dialog select{border-radius:var(--control-radius)}
+#photoindex-desktop dialog.settings-dialog[data-kind=mapping]{width:480px;padding:26px;max-width:calc(100vw - 32px);overflow-y:auto}
+#photoindex-desktop .settings-group{margin:21px 0 0;padding:16px;border:1px solid var(--line);border-radius:var(--card-radius);background:var(--bg)}
+#photoindex-desktop .settings-group>h3{margin:0 0 13px;font-size:12px;font-weight:500;color:var(--muted)}
+#photoindex-desktop .settings-group>label{margin-top:13px}
+#photoindex-desktop .settings-group>label:first-of-type{margin-top:0}
+#photoindex-desktop .settings-group .dialoghint{font-size:12px;line-height:1.75;margin-top:10px;overflow-wrap:anywhere}
+#photoindex-desktop .settings-group .settings-sync-slot .sync-controls{margin:0 0 15px;min-height:44px}
+#photoindex-desktop .settings-connect{display:flex;align-items:center;justify-content:flex-start;gap:9px;width:100%;min-height:44px;background:var(--selected);color:var(--blue);padding:10px 13px;font-size:13px;border:1px solid transparent}
+#photoindex-desktop .settings-connect:focus-visible{outline-offset:2px}
+#photoindex-desktop .personchips{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;max-height:min(34dvh,300px);overflow-y:auto;overscroll-behavior:contain;padding:3px 3px 5px;scrollbar-width:thin}
+#photoindex-desktop .personchip{display:flex;min-width:0;min-height:42px;width:100%;border-radius:var(--control-radius);padding:4px 4px 4px 6px;gap:4px}
+#photoindex-desktop .personchip .avatar-edit{display:flex;flex:1;min-width:0;min-height:34px;padding:0;justify-content:flex-start;gap:8px;border-radius:9px;overflow:hidden}
+#photoindex-desktop .personchip .avatar-edit .person-avatar{flex-shrink:0}
+#photoindex-desktop .personchip .person-chip-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#photoindex-desktop .personchip [data-remove-person]{width:32px;height:32px;padding:7px;flex-shrink:0;color:var(--muted);border-radius:9px}
+#photoindex-desktop .personchip [data-remove-person]:hover{color:#ff453a}
+#photoindex-desktop .dialogactions button{border-radius:var(--control-radius);min-height:40px}
+#photoindex-desktop .snackbar{font-size:13px;line-height:1.6;max-width:calc(100vw - 32px);overflow-wrap:anywhere}
+@media(max-width:680px){#photoindex-desktop dialog.settings-dialog[data-kind=mapping]{padding:23px 20px}#photoindex-desktop .settings-group{padding:14px}}
+@media(prefers-reduced-motion:reduce){#photoindex-desktop button,#photoindex-desktop .searchbox,#photoindex-desktop .switch-track,#photoindex-desktop .switch-track span,#photoindex-desktop .natural-grid .photo-tile img{transition:none}}

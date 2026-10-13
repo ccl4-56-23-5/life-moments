@@ -1,0 +1,13 @@
+#photoindex-desktop .person-existing-tags-section{margin-top:23px;padding-top:18px;border-top:1px solid var(--line)}
+#photoindex-desktop .person-existing-tags-section h3{margin:0 0 11px;font-size:12px;font-weight:600;color:var(--muted)}
+#photoindex-desktop .person-existing-tags{display:flex;flex-wrap:wrap;gap:8px;max-height:176px;overflow-y:auto;overflow-x:hidden;padding:3px}
+#photoindex-desktop .person-existing-tag{display:inline-flex;align-items:center;gap:5px;padding:7px 11px;border:1px solid transparent;border-radius:11px;background:var(--surface);font-size:12px;line-height:1.5;max-width:100%;white-space:normal;overflow-wrap:anywhere;text-align:left;transition:background .22s cubic-bezier(.22,1,.36,1),color .22s cubic-bezier(.22,1,.36,1),border-color .22s cubic-bezier(.22,1,.36,1)}
+#photoindex-desktop .person-existing-tag>span:last-child{min-width:0;overflow-wrap:anywhere}
+#photoindex-desktop .person-existing-tag:hover{background:var(--selected);color:var(--blue)}
+#photoindex-desktop .person-existing-tag[aria-pressed=true]{background:var(--selected);color:var(--blue);border-color:color-mix(in srgb,var(--blue) 22%,transparent)}
+#photoindex-desktop .person-existing-tag-check{display:none;flex-shrink:0;line-height:0}
+#photoindex-desktop .person-existing-tag-check svg{width:13px;height:13px;stroke-width:2.5}
+#photoindex-desktop .person-existing-tag[aria-pressed=true] .person-existing-tag-check{display:block}
+#photoindex-desktop .person-existing-tag:focus-visible{outline:3px solid color-mix(in srgb,var(--button) 25%,transparent);outline-offset:1px}
+#photoindex-desktop .person-existing-tags-empty{margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+@media(prefers-reduced-motion:reduce){#photoindex-desktop .person-existing-tag{transition:none}}
