@@ -1,0 +1,19 @@
+plugins { id 'com.android.application' }
+android {
+    namespace 'com.lifemoments.reader'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'com.lifemoments.reader'
+        minSdk 28
+        targetSdk 35
+        versionCode 5
+        versionName '0.1.0-beta.5'
+        testInstrumentationRunner 'com.lifemoments.reader.ReaderInstrumentation'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    lint { abortOnError true }
+    buildTypes { release { minifyEnabled false } }
+}
