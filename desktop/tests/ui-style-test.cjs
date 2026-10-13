@@ -1,0 +1,25 @@
+const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert/strict');
+const {chromium,browserOptions}=require('../../android/tests/browser-support.cjs');
+const core=require('../../android/app/src/main/assets/core.js');
+const root=path.resolve(__dirname,'../app'),out=path.resolve(__dirname,'../artifacts/ui-style-qa');fs.mkdirSync(out,{recursive:true});
+const demo=core.normalized(JSON.parse(fs.readFileSync(path.resolve(__dirname,'../../android/app/src/main/assets/demo.json'))),{demo:true});
+const photos=demo.photos.map(p=>({...p,id:Number(p.id),date:core.date(p),month:core.date(p).slice(0,7),fullImage:p.image}));
+const people=Array.from({length:57},(_,i)=>`示例人物 ${String(i+1).padStart(2,'0')}${i===0?' · 名字很长仍保持布局稳定':''}`);
+const data={photos,count:photos.length,source:'示例照片目录',label:'合成样例',scanComplete:true},store={...demo.index,cloudRoot:'/示例照片',people,profiles:Object.fromEntries(people.map(name=>[name,{}])),assignments:{[photos[0].id]:people},notes:{},albums:[],uiPreferences:{photoSort:'time-desc'}};
+const types={'.html':'text/html','.js':'application/javascript','.svg':'image/svg+xml','.png':'image/png'};
+const server=http.createServer((req,res)=>{const url=new URL(req.url,'http://localhost');if(url.pathname==='/config.js'){res.setHeader('Content-Type','application/javascript');res.end('window.lifeMomentsConfig={};');return;}const file=path.resolve(root,'.'+url.pathname);if(!file.startsWith(root+path.sep)||!fs.existsSync(file)){res.writeHead(404);res.end();return;}res.setHeader('Content-Type',types[path.extname(file)]||'application/octet-stream');fs.createReadStream(file).pipe(res);});
+(async()=>{
+ let browser;try{
+  await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));browser=await chromium.launch({...browserOptions,headless:true});
+  const page=await browser.newPage({viewport:{width:1280,height:900},colorScheme:'light'}),errors=[];page.on('pageerror',error=>errors.push(String(error)));
+  await page.addInitScript(({data,store})=>{window.desktopPhotoData=data;window.desktopIndex=store;window.desktopStatus={connected:true,syncEnabled:true,syncText:'索引已同步',cloudFolder:'/apps/示例应用/生活点滴索引'};},{data,store});
+  await page.goto(`http://127.0.0.1:${server.address().port}/index.html`);await page.locator('.photo-tile').first().waitFor();assert.equal(await page.locator('.photo-tile .tagdot').count(),0);
+  for(const width of [390,768,1280]){await page.setViewportSize({width,height:900});await page.waitForTimeout(180);assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Desktop no horizontal overflow ${width}`);}
+  await page.setViewportSize({width:1280,height:900});await page.getByRole('button',{name:'目录设置',exact:true}).first().click();await page.locator('dialog.settings-dialog').waitFor();assert.equal(await page.locator('dialog .settings-group').count(),2);assert.ok((await page.locator('dialog').innerText()).includes('手机同步浏览'));assert.equal(await page.locator('.settings-connect').evaluate(button=>getComputedStyle(button).borderRadius),'12px');
+  await page.screenshot({path:path.join(out,'desktop-settings-light.png'),animations:'disabled'});await page.emulateMedia({colorScheme:'dark'});await page.screenshot({path:path.join(out,'desktop-settings-dark.png'),animations:'disabled'});await page.emulateMedia({colorScheme:'light'});
+  await page.locator('dialog [data-dismiss]').click();await page.locator(`[data-photo="${photos[0].id}"]`).click();await page.locator('.personchips').waitFor();assert.equal(await page.locator('.personchip').count(),57);assert.equal(await page.locator('.person-chip-name').count(),57);assert.ok(await page.locator('.personchips').evaluate(el=>el.clientHeight<=302&&el.scrollHeight>el.clientHeight),'Group faces stay in bounded scroll area');assert.ok(await page.locator('.personchip').first().evaluate(el=>el.scrollWidth<=el.clientWidth),'Long person names stay within chip');assert.ok((await page.locator('.sectionheading h3').first().innerText()).includes('57'));
+  await page.screenshot({path:path.join(out,'desktop-group-people.png'),animations:'disabled'});await page.getByRole('button',{name:'返回照片',exact:true}).click();assert.equal(await page.locator('.photo-tile .tagdot').count(),0);
+  await page.getByRole('button',{name:'目录设置',exact:true}).first().click();await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.settings-connect').evaluate(button=>getComputedStyle(button).transitionDuration),'0s');
+  assert.deepEqual(errors,[]);const report={status:'PASS',photos:photos.length,groupPeople:people.length,widths:[390,768,1280],checks:['shared settings sections and controls','light and dark settings colors','bounded expanded people layout and long names','no photo-grid people badge','reduced-motion controls'],pageErrors:errors};fs.writeFileSync(path.join(out,'results.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ }finally{await browser?.close();server.close();}
+})().catch(error=>{console.error(error);process.exitCode=1;});
