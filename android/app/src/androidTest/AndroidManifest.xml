@@ -1,0 +1,6 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <instrumentation android:name="com.lifemoments.reader.ReaderInstrumentation"
+        android:targetPackage="com.lifemoments.reader" android:label="LifeMoments regression" />
+    <instrumentation android:name="com.lifemoments.reader.ReaderDiagnostics"
+        android:targetPackage="com.lifemoments.reader" android:label="LifeMoments read-only cloud diagnostics" />
+</manifest>
