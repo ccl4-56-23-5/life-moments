@@ -1,0 +1,123 @@
+const fs=require('fs'),path=require('path'),http=require('http'),assert=require('assert/strict');
+const {chromium,browserOptions}=require('./browser-support.cjs');
+const core=require('../app/src/main/assets/core.js');
+const root=path.resolve(__dirname,'../app/src/main/assets'),out=path.resolve(__dirname,'../artifacts/qa');fs.mkdirSync(out,{recursive:true});
+const mime={'.html':'text/html','.js':'application/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png'};
+const server=http.createServer((req,res)=>{const name=decodeURIComponent(new URL(req.url,'http://localhost').pathname);const file=path.resolve(root,'.'+(name==='/'?'/index.html':name));if(!file.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}if(!fs.existsSync(file)){res.writeHead(404);res.end();return;}res.setHeader('Content-Type',mime[path.extname(file)]||'application/octet-stream');fs.createReadStream(file).pipe(res)});
+(async()=>{
+ const sample=JSON.parse(fs.readFileSync(path.join(root,'demo.json'))),normalized=core.normalized(sample,{demo:true});
+ assert.equal(normalized.photos.length,35);assert.equal(core.groups(normalized.photos,'year','time-desc').flatMap(g=>g.photos).length,35);
+ for(const w of [288,328,358,396,700])for(const row of core.rows(normalized.photos,w)){
+  assert.ok(row.items.reduce((sum,item)=>sum+item.width,0)+6*(row.items.length-1)<=w+.1);
+  for(const item of row.items)assert.ok(Math.abs(item.width/row.height-item.photo.width/item.photo.height)<1e-8);
+ }
+ assert.throws(()=>core.normalized({...sample,schemaVersion:3}));
+ assert.throws(()=>core.normalized({...sample,photos:[sample.photos[0],sample.photos[0]]}));
+ assert.throws(()=>core.normalized({...sample,photos:[{...sample.photos[0],cloudPath:'/apps/test/../a.jpg'}]}));
+ const clean=core.normalized({...sample,photos:[{...sample.photos[0],image:'javascript:alert(1)',fullImage:'file:///secret'}]});assert.ok(!clean.photos[0].image&&!clean.photos[0].fullImage);
+ const override={...sample.index,photoLocations:{[sample.photos[0].id]:{manual:[108.97,34.25]}}};assert.deepEqual(core.coordinates(sample.photos[0],override),[108.97,34.25]);
+ const parsed=core.normalized(sample,{demo:true});const a=sample.index.albums[0];assert.equal(core.filtered(parsed,{view:'album',album:0,query:'',sort:'time-desc'}).length,a.ids.length);
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));const url=`http://127.0.0.1:${server.address().port}/index.html`;
+ const browser=await chromium.launch({...browserOptions,headless:true});const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1,isMobile:true,hasTouch:true});const errors=[];
+ page.on('pageerror',error=>errors.push(String(error)));
+ await page.route('**/api.maptiler.com/maps/**',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({version:8,glyphs:'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf',sources:{},layers:[{id:'background',type:'background',paint:{'background-color':'#eef1f5'}}]})}));
+ await page.route('**/api.maptiler.com/fonts/**',route=>route.fulfill({contentType:'application/x-protobuf',body:Buffer.alloc(0)}));
+ await page.goto(url);await page.getByRole('button',{name:'先看看样例',exact:true}).waitFor();
+ await page.screenshot({path:path.join(out,'welcome.png'),fullPage:true,animations:'disabled'});
+ await page.getByRole('button',{name:'先看看样例',exact:true}).click();await page.locator('.photo-tile').first().waitFor();
+ assert.equal(await page.locator('.photo-tile').count(),35);await page.waitForTimeout(300);
+ assert.equal(await page.locator('.photo-tile .person-label,.photo-tile .tagdot,.photo-tile .avatar-small').count(),0);
+ assert.equal(await page.locator('.readonly').count(),0);assert.ok(!(await page.locator('body').innerText()).includes('只读'));
+ for(const width of [320,360,390,430,768,1024,1280,1600]){
+  await page.setViewportSize({width,height:844});await page.waitForTimeout(250);
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`No horizontal overflow at ${width}`);
+  if(width>=720)assert.ok(await page.evaluate(()=>{const nav=document.querySelector('.bottomnav').getBoundingClientRect(),body=document.querySelector('#content').getBoundingClientRect();return nav.height===innerHeight&&body.left>=nav.right}),`Tablet navigation and content separated at ${width}`);
+ }
+ await page.setViewportSize({width:1024,height:768});await page.waitForTimeout(250);await page.screenshot({path:path.join(out,'tablet-gallery.png'),animations:'disabled'});
+ await page.locator('.photo-tile').first().click();await page.getByRole('button',{name:'照片信息',exact:true}).click();
+ assert.ok(await page.evaluate(()=>{const photo=document.querySelector('.photo-viewport').getBoundingClientRect(),info=document.querySelector('.infosheet').getBoundingClientRect();return info.left>=photo.right&&photo.width>600&&info.height>500}), 'Tablet photo and details use separate columns');
+ await page.screenshot({path:path.join(out,'tablet-viewer-info.png'),animations:'disabled'});await page.setViewportSize({width:390,height:844});await page.waitForTimeout(150);await page.getByRole('button',{name:'返回照片',exact:true}).click();assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Closing a rotated viewer reflows photo rows');assert.equal(await page.locator('.photo-tile').count(),35);
+ await page.setViewportSize({width:390,height:844});await page.waitForTimeout(300);
+ await page.screenshot({path:path.join(out,'guide-photos.png'),fullPage:false,animations:'disabled'});
+ for(const group of ['日','月','年']){await page.getByRole('button',{name:group,exact:true}).click();assert.equal(await page.locator('.photo-tile').count(),35);}
+ await page.getByRole('button',{name:'月',exact:true}).click();
+ await page.locator('#date-jump').selectOption({index:2});await page.waitForTimeout(600);assert.ok(await page.evaluate(()=>scrollY>0));
+ await page.locator('#search').fill('生日');await page.waitForTimeout(250);const birthdayCount=await page.locator('.photo-tile').count();assert.ok(birthdayCount>0&&birthdayCount<35);
+ await page.locator('#search').fill('');await page.waitForTimeout(250);
+ await page.locator('#photo-sort').selectOption('name-asc');assert.equal(await page.locator('.photo-tile').count(),35);assert.equal(await page.locator('.timeline-section').count(),1);
+ await page.locator('#photo-sort').selectOption('time-desc');
+ await page.locator('.photo-tile').first().click();await page.locator('#large-photo').waitFor();
+ assert.ok((await page.locator('.viewer-people').innerText()).includes('示例'));
+ assert.ok(await page.locator('.viewer-people .avatar-small').count()>0);
+ await page.getByRole('button',{name:'放大照片',exact:true}).click();assert.ok((await page.locator('#large-photo').getAttribute('style')).includes('scale(2)'));
+ const before=await page.locator('#large-photo').getAttribute('alt');await page.getByRole('button',{name:'下一张',exact:true}).click();assert.notEqual(await page.locator('#large-photo').getAttribute('alt'),before);
+ await page.getByRole('button',{name:'照片信息',exact:true}).click();await page.locator('.infosheet').waitFor();
+ assert.equal(await page.locator('.infosheet textarea,.infosheet input').count(),0);await page.screenshot({path:path.join(out,'viewer-info.png')});
+ await page.getByRole('button',{name:'关闭照片信息',exact:true}).click();await page.getByRole('button',{name:'返回照片',exact:true}).click();
+ await page.getByRole('button',{name:'人物',exact:true}).click();assert.equal(await page.locator('.person-card').count(),3);
+ await page.getByRole('button',{name:'校园',exact:true}).click();assert.equal(await page.locator('.person-card').count(),1);
+ await page.getByRole('button',{name:'全部',exact:true}).click();await page.screenshot({path:path.join(out,'guide-people.png'),animations:'disabled'});
+ await page.locator('.person-card').first().click();const personCount=await page.locator('.photo-tile').count();assert.ok(personCount>0&&personCount<35);await page.getByRole('button',{name:'返回人物',exact:true}).click();
+ await page.getByRole('button',{name:'相册',exact:true}).click();assert.equal(await page.locator('.album-card').count(),3);
+ await page.locator('.album-card').first().click();assert.equal(await page.locator('.photo-tile').count(),15);assert.match(await page.locator('.note').innerText(),/演示/);await page.getByRole('button',{name:'返回相册',exact:true}).click();
+ await page.getByRole('button',{name:'地点',exact:true}).click();await page.waitForFunction(()=>document.querySelector('#photo-map')?.dataset.loaded==='true');
+ await page.screenshot({path:path.join(out,'map-mocked-basemap.png')});
+ await page.getByRole('button',{name:'设置',exact:true}).click();await page.locator('.settings-card').first().waitFor();
+ await page.screenshot({path:path.join(out,'guide-settings.png'),animations:'disabled'});
+ assert.equal(await page.locator('input[type=password]').count(),0);
+ assert.equal(await page.getByRole('button',{name:/保存批注|添加人物|删除相册|编辑标签|上传原图/}).count(),0);
+ await page.getByRole('button',{name:'退出样例',exact:true}).click();await page.getByRole('button',{name:'先看看样例',exact:true}).waitFor();
+ assert.equal(await page.evaluate(()=>localStorage.getItem('reader-library')),null);
+ // Own-app native bridge fixture: automatic HD, long press versus scroll, Wi-Fi retry and eased motion.
+ const nativeContext=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+ await nativeContext.addInitScript(()=>{window.nativeCalls=[];window.Mobile={ready(){window.setMobileStatus({connected:true,bound:true,wifi:true,wifiImages:true})},preview(id){nativeCalls.push(['preview',id]);setTimeout(()=>window.originalReady({id,ok:true,automatic:true}),40)},releasePreview(){nativeCalls.push(['release'])},photoMenu(id){nativeCalls.push(['menu',id])},mediaState(){return JSON.stringify({code:'wifi',message:'等待 Wi-Fi'})},retryPreviews(){nativeCalls.push(['retry'])}};});
+ const nativePage=await nativeContext.newPage();nativePage.on('pageerror',error=>errors.push(String(error)));let failMedia=false,stallMedia=false;const heldMedia=[];
+ const photoBytes=Buffer.from(sample.photos[0].image.split(',')[1],'base64');
+ await nativePage.route('**/snapshot.json',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(sample)}));
+ await nativePage.route('https://appassets.androidplatform.net/media/**',route=>{if(stallMedia&&route.request().url().includes('/thumb')){heldMedia.push(route);return;}return route.fulfill(failMedia?{status:503,contentType:'application/json',headers:{'Access-Control-Allow-Origin':'*'},body:'{}'}:{status:200,contentType:'image/jpeg',headers:{'Access-Control-Allow-Origin':'*'},body:photoBytes});});
+ await nativePage.goto(`http://127.0.0.1:${server.address().port}/index.html`);await nativePage.locator('.photo-tile').first().waitFor();
+ await nativePage.locator('.photo-tile').first().click();await nativePage.waitForFunction(()=>document.querySelector('[data-action=original]').textContent.includes('高清图已显示'));
+ assert.ok(await nativePage.evaluate(()=>nativeCalls.some(([action])=>action==='preview')));
+ await nativePage.getByRole('button',{name:'返回照片',exact:true}).click();assert.ok(await nativePage.evaluate(()=>nativeCalls.some(([action])=>action==='release')));
+ const tile=nativePage.locator('.photo-tile').first();await tile.dispatchEvent('pointerdown',{pointerId:1,pointerType:'touch',clientX:100,clientY:300,button:0});await nativePage.waitForTimeout(600);await tile.dispatchEvent('pointerup',{pointerId:1,pointerType:'touch',clientX:100,clientY:300});
+ assert.equal(await nativePage.evaluate(()=>nativeCalls.filter(([action])=>action==='menu').length),1);
+ await tile.dispatchEvent('pointerdown',{pointerId:2,pointerType:'touch',clientX:100,clientY:300,button:0});await tile.dispatchEvent('pointermove',{pointerId:2,pointerType:'touch',clientX:100,clientY:330});await nativePage.waitForTimeout(600);await tile.dispatchEvent('pointerup',{pointerId:2,pointerType:'touch'});assert.equal(await nativePage.evaluate(()=>nativeCalls.filter(([action])=>action==='menu').length),1);
+ failMedia=true;await nativePage.evaluate(()=>{clearImageMemory();window.setMobileStatus({wifi:false});state.query='';render(false)});await nativePage.waitForFunction(()=>document.querySelector('img[data-media-error=wifi]'));
+ await nativePage.waitForTimeout(750);await nativePage.locator('.photo-tile').first().click();await nativePage.locator('.photo-viewport .media-error').waitFor();await nativePage.getByRole('button',{name:'照片信息',exact:true}).click();await nativePage.locator('.infosheet').waitFor();await nativePage.getByRole('button',{name:'返回照片',exact:true}).click();
+ failMedia=false;await nativePage.evaluate(()=>window.setMobileStatus({wifi:true}));await nativePage.waitForFunction(()=>document.querySelector('.photo-tile img.loaded'));assert.ok(await nativePage.locator('.photo-tile img.loaded').count()>0);
+ // A locked/background page must abort outstanding fetches and free both slots before retrying on resume.
+ stallMedia=true;await nativePage.evaluate(()=>{clearImageMemory();render(false)});await nativePage.waitForFunction(()=>imageRequests.size===2&&activeImages===2);
+ await nativePage.evaluate(()=>pauseImages());await nativePage.waitForFunction(()=>imageRequests.size===0&&activeImages===0);
+ stallMedia=false;await nativePage.evaluate(()=>window.appResumed({wifi:true,online:true}));await nativePage.waitForFunction(()=>document.querySelector('.photo-tile img.loaded')&&activeImages<=2);
+ await Promise.all(heldMedia.map(route=>route.abort().catch(()=>{})));
+ await nativePage.locator('.photo-tile').first().click();await nativePage.waitForFunction(()=>fullObjectURL!==null);await nativePage.evaluate(()=>window.previewMemoryReleased());assert.equal(await nativePage.evaluate(()=>fullObjectURL),null);await nativePage.waitForFunction(()=>document.querySelector('#large-photo')?.dataset.full==='false');
+ // Native pause can cancel HD without a visibilitychange. Two recovery events must clear stale UI state and issue one HD request.
+ const previewsBeforeResume=await nativePage.evaluate(()=>nativeCalls.filter(([action])=>action==='preview').length);
+ await nativePage.evaluate(()=>{loadingOriginal=true;highResTimer=setTimeout(()=>{loadingOriginal=false;requestHighRes(true)},100);window.appResumed({wifi:true,online:true});setTimeout(()=>window.appResumed({wifi:true,online:true}),40);});
+ await nativePage.waitForFunction(()=>!loadingOriginal&&fullObjectURL!==null);await nativePage.waitForTimeout(450);assert.equal(await nativePage.evaluate(()=>nativeCalls.filter(([action])=>action==='preview').length),previewsBeforeResume+1,'Coalesced resume fetches HD once without visibilitychange');
+ await nativePage.getByRole('button',{name:'返回照片',exact:true}).click();
+ const exported=JSON.parse(await nativePage.evaluate(()=>window.exportLocalSettings()));assert.deepEqual(Object.keys(exported).sort(),['preferences','schemaVersion']);assert.ok(Object.keys(exported.preferences).every(key=>['sort','group','albumSort'].includes(key)));
+ assert.equal(JSON.parse(await nativePage.evaluate(()=>window.importLocalSettings({schemaVersion:1,preferences:{sort:'name-asc',group:'year',albumSort:'count'}}))).ok,true);
+ assert.equal(JSON.parse(await nativePage.evaluate(()=>window.importLocalSettings({schemaVersion:1,preferences:{accessToken:'forbidden'}}))).ok,false);assert.equal(JSON.parse(await nativePage.evaluate(()=>window.importLocalSettings({schemaVersion:1,preferences:{sort:'bad'}}))).ok,false);
+ await nativePage.getByRole('button',{name:'设置',exact:true}).click();await nativePage.evaluate(()=>window.setMobileStatus({thumbnailWarmup:{state:'running',done:25,total:35,failed:1}}));assert.ok((await nativePage.locator('[data-action=cancelThumbnailCache]').innerText()).includes('25 / 35'));
+ assert.ok(await nativePage.evaluate(()=>{const button=document.querySelector('[data-setting-key="thumbnail-warmup"]');button.focus();window.setMobileStatus({thumbnailWarmup:{state:'running',done:26,total:35,failed:1},cacheBytes:12000,thumbnailCacheBytes:12000});return button===document.querySelector('[data-setting-key="thumbnail-warmup"]')&&document.activeElement===button&&button.querySelector('[role=progressbar]').getAttribute('aria-valuenow')==='26';}),'Progress updates preserve the settings button and keyboard focus');
+ await nativePage.evaluate(()=>window.setMobileStatus({thumbnailWarmupAuto:false,thumbnailWarmup:{state:'paused',cached:25,total:35,text:'自动缓存已暂停'}}));assert.ok((await nativePage.locator('[data-action=cacheAllThumbnails]').innerText()).includes('点击继续或重试'));assert.equal(await nativePage.locator('[data-action=cancelThumbnailCache]').count(),0);await nativePage.evaluate(()=>window.setMobileStatus({thumbnailWarmupAuto:true,thumbnailWarmup:{state:'complete',cached:34,total:35,failed:1}}));assert.ok((await nativePage.locator('[data-action=cacheAllThumbnails]').innerText()).includes('缩略图扫描完成'));await nativePage.evaluate(()=>window.setMobileStatus({thumbnailWarmup:{state:'capacitylimit',done:25,total:35,reason:'预留可用空间'}}));assert.ok((await nativePage.locator('[data-action=cacheAllThumbnails]').innerText()).includes('缓存空间达到上限'));assert.equal(await nativePage.locator('[data-action=transferDevices]').count(),1);
+ const motion=await nativePage.evaluate(()=>{navigate('people');return new Promise(resolve=>requestAnimationFrame(()=>resolve(document.getAnimations().filter(a=>a.effect?.getTiming().duration===260).map(a=>a.effect.getTiming().easing))))});assert.ok(motion.some(ease=>ease.replace(/\s/g,'')==='cubic-bezier(0.22,1,0.36,1)'));
+ await nativePage.emulateMedia({reducedMotion:'reduce'});await nativePage.waitForFunction(()=>motionPreference.matches&&!motions.some(a=>a.playState==='running'),null,{timeout:1000});assert.equal(await nativePage.evaluate(()=>document.getAnimations().filter(a=>a.effect?.getTiming().duration===260).length),0);await nativeContext.close();
+ // Exercise the real-data renderer with hostile labels: all become text, never HTML.
+ await page.route('**/preview-snapshot.json',route=>route.fulfill({contentType:'application/json',body:JSON.stringify({...sample,photos:[{...sample.photos[0],name:'<img src=x onerror=alert(1)>',id:1}],index:{...sample.index,people:['<script>bad()</script>'],assignments:{'1':['<script>bad()</script>']},notes:{'1':'<b>note</b>'},albums:[]}})}));
+ await page.reload();await page.locator('.photo-tile').waitFor();assert.equal(await page.locator('img[onerror],script:not([src])').count(),0);
+ await page.getByRole('button',{name:'人物',exact:true}).click();assert.equal(await page.locator('.person-card strong').innerText(),'<script>bad()</script>');
+ // Dense group-photo fixture: bounded summary, progressive avatars and search keep the image usable.
+ const groupNames=Array.from({length:57},(_,i)=>'合照人物'+String(i+1).padStart(2,'0')),groupPhoto={...sample.photos[0],gps:null};
+ const groupDoc={...sample,photos:[groupPhoto],index:{people:groupNames,profiles:Object.fromEntries(groupNames.map(name=>[name,{avatar:{photoId:groupPhoto.id,x:.1,y:.1,width:.2,height:.2}}])),assignments:{[groupPhoto.id]:groupNames},notes:{},photoLocations:{},albums:[]}};
+ const groupPage=await browser.newPage({viewport:{width:1280,height:800}});groupPage.on('pageerror',error=>errors.push(String(error)));
+ await groupPage.route('**/preview-snapshot.json',route=>route.fulfill({contentType:'application/json',body:JSON.stringify(groupDoc)}));await groupPage.route('**/media/**',route=>route.fulfill({contentType:'image/jpeg',body:photoBytes}));await groupPage.goto(url);await groupPage.locator('.photo-tile').click();
+ assert.equal(await groupPage.locator('.viewer-people [data-person]').count(),6);assert.equal(await groupPage.locator('.viewer-people .avatar-small').count(),6);assert.ok(await groupPage.locator('.viewer-people').evaluate(node=>node.getBoundingClientRect().height<=54));
+ await groupPage.getByRole('button',{name:'查看全部 57 位',exact:true}).click();assert.equal(await groupPage.locator('#photo-people-list [data-person]').count(),12);await groupPage.locator('[data-action=morepeople]').click();assert.equal(await groupPage.locator('#photo-people-list [data-person]').count(),24);
+ await groupPage.locator('#photo-people-search').fill('人物57');assert.equal(await groupPage.locator('#photo-people-list [data-person]').count(),1);assert.match(await groupPage.locator('#photo-people-list').innerText(),/57/);await groupPage.locator('#photo-people-search').fill('');assert.equal(await groupPage.locator('#photo-people-list [data-person]').count(),12);await groupPage.screenshot({path:path.join(out,'tablet-group-people.png'),animations:'disabled'});
+ await groupPage.setViewportSize({width:390,height:844});await groupPage.waitForTimeout(200);assert.ok(await groupPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.ok(await groupPage.locator('.info-people .peoplechips').evaluate(node=>node.getBoundingClientRect().height<=320));await groupPage.screenshot({path:path.join(out,'phone-group-people.png'),animations:'disabled'});await groupPage.close();
+ assert.deepEqual(errors,[]);
+ const result={status:'PASS',samplePhotos:35,widths:[320,360,390,430,768,1024,1280,1600],groupPeople:57,birthdayCount,personCount,checks:['continuous timeline','aspect ratios','date jump','sort','search','tablet navigation and viewer detail columns','viewer zoom and navigation','no read-only badges or photo-grid people badges','avatars in expanded viewer','bounded group-photo people list, progressive expansion and search','people tags and return','album note and return','automatic high-resolution bridge flow','long press menu and scroll cancellation','Wi-Fi image retry','failed photo remains usable','background fetch cancellation and resume retry','release browser HD memory','local settings export and strict import allowlist','warmup status, manual resume and transfer settings entry','nonlinear transitions and reduced motion','map layers with mocked basemap','demo leaves saved index untouched','hostile labels escaped','no secrets in web UI'],pageErrors:errors};
+ fs.writeFileSync(path.join(out,'ui-results.json'),JSON.stringify(result,null,2));console.log(JSON.stringify(result));await browser.close();server.close();
+})().catch(error=>{console.error(error);server.close();process.exit(1)});
