@@ -1,0 +1,42 @@
+# Local connection settings, credentials and signing material
+config.local.json
+*.keystore
+*.jks
+*.pfx
+*.pem
+.env*
+local.properties
+**/local.properties
+# Generated applications, private QA / backup data and dependency caches
+desktop/out/
+desktop/artifacts/
+desktop/vendor/
+desktop/app/index.html
+android/.gradle/
+android/build/
+android/app/build/
+android/artifacts/
+android/app/src/main/assets/config.js
+android/app/src/main/assets/guide.html
+android/app/src/main/assets/preview-snapshot.json
+android/app/src/main/res/drawable/app_icon.png
+releases/
+backups/
+tools/node_modules/
+tools/local/
+__pycache__/
+.venv/
+*.pyc
+# Only the desktop build inputs and synthetic demo generator belong in Git.
+preview/*
+!preview/desktop-v2-template.html
+!preview/enhancements-v3.js
+!preview/simplified-geo.json
+!preview/maplibre-gl.js
+!preview/maplibre-gl.css
+!preview/create_demo.py
+相册桌面端预览.html
+scripts/prepare-local-backup.py
+# Device-specific verification tools and historical logs stay local.
+android/tests/phone-preview-test.cjs
+desktop/电脑端维护日志.md
