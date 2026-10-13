@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>生活点滴｜手机端拉取数据教程</title><style>
+*{box-sizing:border-box}body{margin:0;color:#202125;background:#f2f2f7;font:15px/1.9 -apple-system,BlinkMacSystemFont,'Segoe UI','Microsoft YaHei',sans-serif}main{max-width:900px;background:white;margin:24px auto;padding:42px 52px 60px;border:1px solid #e7e7ec;border-radius:24px}h1{font-size:32px;line-height:1.35;letter-spacing:-.8px;margin:8px 0 14px}h2{font-size:22px;margin:34px 0 12px;line-height:1.5}h3{font-size:17px;margin:24px 0 8px}p{margin:10px 0}a{color:#007aff;text-decoration:none}a:hover{text-decoration:underline}.eyebrow{color:#007aff;font-size:12px;font-weight:600}.lead{color:#7c7d85;font-size:15px}.callout{background:#e7f1ff;border:1px solid #d9e8ff;padding:14px 18px;border-radius:14px;margin:20px 0}.tip{background:#f2f2f7;border-radius:14px;padding:14px 18px}.step{display:inline-flex;align-items:center;justify-content:center;background:#007aff;color:white;width:31px;height:31px;border-radius:10px;font-size:16px;margin-right:9px}table{border-collapse:collapse;width:100%;margin:16px 0;font-size:13px}th,td{border:1px solid #e7e7ec;padding:11px 13px;vertical-align:top;text-align:left;overflow-wrap:anywhere}td:first-child{white-space:nowrap}th{background:#f8f8fb;font-weight:600}code{background:#f2f2f7;border-radius:5px;padding:2px 5px;font:13px/1.6 Consolas,monospace;overflow-wrap:anywhere}pre{background:#f2f2f7;padding:16px;border-radius:13px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;font:13px/1.75 Consolas,monospace}ol,ul{padding-left:25px}li{margin:7px 0}.shots{display:flex;gap:22px;align-items:flex-start;justify-content:center;margin:25px 0;flex-wrap:wrap}.shots figure{margin:0;max-width:260px;flex:1;min-width:200px}.shots img{width:100%;border-radius:20px;border:1px solid #e7e7ec;box-shadow:0 8px 30px #24284212}.shots figcaption{text-align:center;color:#7c7d85;font-size:12px;margin-top:8px}.brand{display:flex;align-items:center;gap:11px;font-size:16px;font-weight:600}.brand img{width:34px;height:34px}.muted{color:#7c7d85;font-size:12px}.toc{display:flex;flex-wrap:wrap;gap:8px 20px;padding:14px 0;border-top:1px solid #e7e7ec;border-bottom:1px solid #e7e7ec;margin-top:25px;font-size:13px}.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin:20px 0;font-size:13px}.flow span{background:#f2f2f7;padding:10px 14px;border-radius:11px}.flow b{color:#007aff}section{scroll-margin-top:20px}@media(max-width:620px){main{padding:24px 20px;margin:0;border:0;border-radius:0}h1{font-size:27px}h2{font-size:20px}table{font-size:12px}th,td{padding:8px}.shots{gap:15px}.shots figure{min-width:140px}.toc{gap:8px 14px}}@media print{body{background:white;font-size:11px}main{border:0;margin:0;padding:0;max-width:none}h1{font-size:26px}h2{font-size:17px;break-after:avoid}h3{break-after:avoid}table,.tip,.callout,figure{break-inside:avoid}.shots figure{max-width:190px}.toc{display:none}a{color:#202125}.no-print{display:none}}
+</style></head><body><main>
+<div class="brand"><img src="app/src/main/assets/logo.svg" onerror="this.src='logo.svg'" alt="">生活点滴 <span class="eyebrow">Android 0.1.0-beta.5</span></div>
+<h1>手机端拉取数据教程</h1>
+<p class="lead">电脑负责整理，手机负责浏览。先发布一份索引，再让手机读取你已备份到百度网盘的照片。</p>
+<p class="muted">编写日期：2026 年 10 月 13 日 · 适用于 Android 9 及以上 · 本文对应本次交付的 Beta APK。</p>
+<div class="toc"><a href="#prepare">准备与权限</a><a href="#desktop">电脑发布</a><a href="#mobile">手机连接</a><a href="#read">读取与浏览</a><a href="#offline">本地导入</a><a href="#errors">问题排查</a></div>
+<div class="callout"><strong>本版需要复用你现有的一个百度应用，不必再申请第二个。</strong><br>两端分别登录并授权存放照片的同一个百度账号。AppKey/SecretKey 相同，访问令牌各自生成；不要把电脑的 refresh_token 复制给手机。</div>
+<div class="flow"><span>电脑人物 / 相册 / 批注</span><b>→</b><span>网盘索引快照</span><b>→</b><span>手机浏览图库</span></div>
+<p>原照片仍通过你现有的备份流程上传。手机不会编辑整理信息，也不会上传、移动或删除网盘照片。只要网盘已经收到索引和原片，电脑关机后手机仍能读取。</p>
+
+<section id="prepare"><h2><span class="step">1</span>先准备好四项信息</h2>
+<table><thead><tr><th>信息</th><th>从哪里获得</th><th>怎么填写</th></tr></thead><tbody>
+<tr><td>AppKey</td><td>百度网盘开放平台 → 控制台 → 现有应用 → 应用详情</td><td>复制原值，电脑和手机使用同一个应用。</td></tr>
+<tr><td>SecretKey</td><td>同一应用的详情页面</td><td>复制原值；AppKey 与 SecretKey 必须是一对。</td></tr>
+<tr><td>索引目录</td><td>电脑端 → 设置 → 连接配置</td><td>例如 <code>/apps/你的应用名称/生活点滴索引</code>，两端完全一致。</td></tr>
+<tr><td>原片目录</td><td>电脑端设置中的“百度网盘照片目录”，同时对照实际备份位置</td><td>按实际目录填写，例如 <code>/数据备份/照片</code>。新版会保留索引内的年/月相对目录，使用此根目录形成完整原片路径。</td></tr>
+</tbody></table>
+<p><strong>“你的应用名称”是占位符，请替换为百度控制台中真实的应用名称。</strong>百度网盘客户端里可能显示为“我的应用数据”，API 路径仍写 <code>/apps/应用名称</code>。</p>
+<p class="tip">如果电脑已发布的旧索引仍写 <code>/生活点滴</code>，而实际原片在 <code>/数据备份/照片</code>，手机填写后者即可替换旧目录前缀。子目录和文件名必须保持一致；不会搜索同名照片。推荐电脑端也更新目录，以便以后发布的路径一致。</p><h3>连接前必须确认目录权限和配额</h3>
+<ol>
+<li>打开 <a href="https://pan.baidu.com/union/console/applist">百度网盘开放平台控制台</a>，进入<strong>已经创建的应用</strong>，确认应用状态和已开通接口；不要另建应用。</li>
+<li>对照 <a href="https://pan.baidu.com/union/doc/使用入门/权限与配额/">官方《权限与配额》</a>，确认你有读取索引目录和原片目录的授权。默认通常只包含 <code>/apps/应用名称</code>；填写路径、获得 <code>basic,netdisk</code> scope 都不能自动增加目录权限。</li>
+<li>若原片在 <code>/生活点滴</code> 等应用目录以外，先确认平台是否已授予该目录访问权限。没有授权时，应先通过平台支持的方式增加目录授权；若该应用无法增加范围，可以用现有备份流程把所需原片另行备份到允许访问的应用目录，并在电脑端更新映射。<strong>不要为了连接测试删除或移动原有备份。</strong></li>
+<li>官方 2026-07-03 文档列出未审核应用的接口频控为<strong>每小时 10 次</strong>、最多 10 个授权用户。照片浏览会多次查询文件信息，这个测试配额可能很快用完。正式连续使用前需要按控制台和平台审核要求取得足够配额；缓存不能代替配额。</li>
+</ol>
+<p class="tip">个人只能创建一个应用、应用最多能授权多少用户、每小时能访问多少次接口，是三个不同限制。两台设备复用一个应用不会创造第二份接口配额。实际可用权限和配额以你现有应用为准。</p>
+</section>
+
+<section id="desktop"><h2><span class="step">2</span>在电脑端发布整理信息</h2>
+<ol>
+<li>打开电脑上的<strong>生活点滴 Beta</strong>，进入<strong>设置</strong>。确认本地照片根目录为你当前使用的目录，例如 <code>D:\照片</code>。</li>
+<li>检查<strong>百度网盘照片目录</strong>与实际网盘原片根目录一致。软件会保留每张照片的相对路径：</li>
+</ol>
+<pre>本地照片：D:\照片\2022\某张照片.jpg
+本地根目录：D:\照片
+网盘根目录：/生活点滴
+手机查找：/生活点滴/2022/某张照片.jpg</pre>
+<p>如果网盘根目录改为 <code>/apps/应用名称/原片</code>，手机查找的位置就是 <code>/apps/应用名称/原片/2022/某张照片.jpg</code>。网盘备份必须保留相对目录结构和原文件名；手机不会搜索同名文件后随便选一张。</p>
+<ol start="3">
+<li>在设置中找到<strong>百度网盘索引同步</strong>，点击<strong>连接百度网盘</strong>（已连接时为<strong>连接配置</strong>）。填写现有应用的 AppKey、SecretKey 和索引目录。</li>
+<li>点击<strong>授权连接</strong>。系统浏览器会打开百度授权页；使用存放照片的百度账号登录，按窗口提示输入用户码并同意授权。</li>
+<li>授权成功后返回相册，开启<strong>索引同步</strong>。点击同步开关旁的上传图标，立即发布当前索引。等待状态变为“已同步”。后续编辑人物、相册或批注，电脑会在停止编辑约 15 秒后尝试自动发布。</li>
+<li>在百度网盘中打开索引目录，确认至少存在一份 <code>index-日期时间-随机编号.json</code>。例如 <code>index-20261012T143000000-a1b2c3d4.json</code>。文件名中的时间使用 UTC，和北京时间相差 8 小时是正常的。</li>
+</ol>
+<p class="tip">电脑只上传索引，不上传照片。如果照片的备份尚未完成，手机可能已能看到人物、相册和照片名称，但图片暂时加载不到。应等你原来的备份流程完成。</p>
+</section>
+
+<section id="mobile"><h2><span class="step">3</span>安装并连接手机端</h2>
+<ol>
+<li>把本次交付的 <strong>生活点滴-安卓-0.1.0-beta.5.apk</strong> 传到手机，点击安装。系统如提示来源安装权限，按提示为你用于打开 APK 的应用开启安装权限。</li>
+<li>打开<strong>生活点滴 Beta</strong>。第一次启动显示欢迎页，点击<strong>连接百度网盘</strong>；也可以点击右上角齿轮 → <strong>连接百度网盘</strong>。</li>
+<li>在安卓原生连接窗口中填写下表。SecretKey 使用密码掩码，密钥和令牌由 Android Keystore 加密保存在本机，不进入相册页面，也不会写入索引。</li>
+</ol>
+<table><thead><tr><th>手机窗口中的字段</th><th>应该填写的内容</th></tr></thead><tbody>
+<tr><td>AppKey</td><td>电脑端使用的 AppKey。</td></tr>
+<tr><td>SecretKey</td><td>同一应用的 SecretKey。</td></tr>
+<tr><td>索引目录</td><td>与电脑连接配置完全相同，例如 <code>/apps/应用名称/生活点滴索引</code>。</td></tr>
+<tr><td>已获百度授权的原片目录</td><td>与电脑“百度网盘照片目录”相同，且已获得实际目录授权。此输入框仅限制手机客户端读取范围，不会替你向百度申请权限。</td></tr>
+</tbody></table>
+<ol start="4">
+<li>点击<strong>授权连接</strong>。App 会申请独立设备授权并打开系统浏览器。手机屏幕上的授权地址可直接打开，不需要用另一台手机扫描自己屏幕上的二维码。</li>
+<li>在百度页面登录与电脑相同的账号，按页面要求确认用户码并允许授权。切回生活点滴，等待提示<strong>连接成功，点击刷新索引</strong>。</li>
+<li>授权超时、取消或填错密钥时，返回连接窗口重新点击授权连接。未成功前不会覆盖已保存的凭据。</li>
+</ol>
+<p class="tip">手机和电脑各自取得 access_token / refresh_token。百度 refresh_token 只能使用一次，续期后必须保存新的 refresh_token；本 App 会串行处理续期。撤销授权、令牌失效或续期失败后需重新连接。</p>
+</section>
+
+<section id="read"><h2><span class="step">4</span>拉取索引，开始浏览</h2>
+<ol>
+<li>连接手机 Wi-Fi。在右上角点击<strong>刷新索引</strong>图标，或进入<strong>设置 → 刷新索引</strong>。</li>
+<li>App 会列举索引目录，选取最新的完整快照，下载后校验长度、格式和照片编号。校验成功才整体切换到新图库；失败时旧索引保持可用。</li>
+<li>界面出现照片数量后，可以用底部（平板为侧边）的<strong>照片、地点、人物、相册</strong>切换浏览。示例下图仅展示界面样式，<strong>真实图库不会带“样例浏览”提示</strong>。</li>
+</ol>
+<div class="shots"><figure><img src="../docs/images/guide-photos.png" onerror="this.src='guide-photos.png'" alt="手机照片时间线样例"><figcaption>连续时间线、日期定位与排序</figcaption></figure><figure><img src="../docs/images/guide-people.png" onerror="this.src='guide-people.png'" alt="手机人物页面样例"><figcaption>沿用电脑人物头像和标签</figcaption></figure></div>
+<table><thead><tr><th>操作</th><th>具体位置</th></tr></thead><tbody>
+<tr><td>按日 / 月 / 年浏览</td><td>照片页悬浮时间栏。只改变分组标题，全部照片仍可连续滚动。</td></tr>
+<tr><td>跳转日期、切换排序</td><td>同一悬浮栏中的“跳转日期”和“时间 ↓ / 时间 ↑ / 名称”。</td></tr>
+<tr><td>搜索照片或批注</td><td>顶栏搜索框，可搜文件名、日期、人物姓名和照片批注。</td></tr>
+<tr><td>浏览高清图</td><td>点击一张照片后，先显示缓存缩略图，再自动读取云端高清图。高清图只在当前浏览内存中显示，关闭照片后释放。默认在 Wi-Fi 下自动读取；移动网络可点击“读取高清图”单独确认。</td></tr>
+<tr><td>下载到手机</td><td>在照片小图或展开的大图上长按，选择“下载到手机相册”。Android 10 及以上保存到系统相册的“生活点滴”；Android 9 使用系统文件选择器选择保存位置。保存的是完整原片。</td></tr>
+<tr><td>缩放和切换大图</td><td>双指缩放、放大后拖动；原始缩放下左右轻扫；底栏也有上一张、下一张和放大按钮。</td></tr>
+<tr><td>查看人物、批注、相册和地点</td><td>人物姓名及小头像只显示在展开界面，小图模式不显示人数或人物标记。大合照先展示前 6 人，点展开查看更多；照片信息中可按姓名搜索人物并分批展示。大图右上角“照片信息”可查看详细资料；点击人物进入单人照片页，点击相册名进入相册。</td></tr>
+<tr><td>查看地图上的照片</td><td>底部“地点”；远景热力 / 数量聚合，点击聚合放大，近景可点缩略图查看这里的照片。</td></tr>
+</tbody></table>
+<p>启动并满足连接和网络条件后，App 在后台分批缓存整个图库的缩略图；当前照片优先加载。设置中可查看进度、暂停或继续。缩略图缓存最多 1 GiB，并为手机保留至少 128 MiB 可用空间；空间不足时停止并提示，避免反复淘汰重下。浏览内存最多复用 96 张预览。高清图不会写入应用原片缓存或系统相册；浏览预览最长边最多 4096 像素，并按设备可用内存调整；超过 64 MiB 或当前内存预算的原片可长按下载后查看。HEIF 解码依赖手机系统；本版不支持 RAW、视频或 HDR 保真显示。</p>
+<h3>平板与大合照</h3>
+<p>宽屏平板使用侧边导航，横向展开照片时可同时查看大图和资料侧栏；竖屏或分屏自动回到适合当前宽度的布局。大合照的人物列表不会挤满整张照片，展开全员后可按姓名查找。</p>
+<h3>新手机复制设置</h3>
+<ol><li>两台设备都安装当前 Beta.5，并连接同一个 Wi-Fi。旧设备进入<strong>设置 → 扫描局域网设备 → 旧设备：发送设置</strong>，新设备选择<strong>接收设置</strong>。</li><li>新设备扫描并选择旧设备。核对两台屏幕的配对数字完全一致，并在两端确认。</li><li>传输成功后，新设备得到网盘应用配置、当前授权、索引目录、原片目录、图库索引、Wi-Fi 与缓存选项和浏览排序分组。敏感连接资料通过加密通道发送，并在新设备重新加密存储。</li></ol>
+<p>迁移不复制原片和缩略图；新设备按设置从网盘缓存缩略图。连接资料为当前授权快照，若之后提示授权过期或续期失败，在新设备重新授权即可继续复用同一个百度应用。扫描不到时检查 Wi-Fi 是否隔离设备，或使用界面中的地址连接方式。取消、离开应用或超时会关闭迁移会话。</p>
+<h3>以后电脑上的修改怎么到手机？</h3>
+<p>电脑编辑 → 等待状态“已同步” → 手机上点击刷新索引。手机不会持续轮询网盘，避免不必要的接口调用。刷新中断或新版本损坏时，手机保留旧版继续阅读。</p>
+<h3>离线时能看什么？</h3>
+<p>已下载的索引可以离线浏览和搜索，已有缩略图缓存也可显示；高清图需联网读取。地图底图需要网络。在<strong>设置 → 清理照片缓存</strong>中可以释放缩略图空间，人物、批注、相册索引和你长按下载到系统相册的原片保留。默认仅在 Wi-Fi 下自动加载照片。</p>
+<div class="shots"><figure><img src="../docs/images/guide-settings.png" onerror="this.src='guide-settings.png'" alt="手机设置页面样例"><figcaption>刷新、连接、本机缓存与教程入口</figcaption></figure></div>
+</section>
+
+<section id="offline"><h2><span class="step">5</span>备用方式：本地导入索引</h2>
+<p>如果暂时无法使用网盘索引同步，可以先把整理结果导入手机，检查人物、相册和批注是否正确。</p>
+<ol>
+<li>电脑端侧栏点击<strong>资料发布 → 导出索引</strong>。把 JSON 文件保存到原照片目录以外，例如桌面或项目资料目录。</li>
+<li>通过你惯用的文件传输方式，把 JSON 传到手机的“下载”等目录。</li>
+<li>手机进入<strong>设置 → 导入电脑端索引</strong>，在安卓文件选择器中选中这个 JSON 文件。</li>
+<li>看到导入成功提示后即可浏览整理信息。若要读取云端原图，仍需先连接百度网盘，确认原片目录权限，并在连接后重新导入或刷新索引。</li>
+</ol>
+<p class="tip">本地导入不会自动补齐原片、增加目录权限或绕过接口频控。它解决的是索引传输，不替代照片读取授权。</p>
+</section>
+
+<section id="errors"><h2>遇到问题，按现象排查</h2>
+<table><thead><tr><th>现象 / 提示</th><th>处理方法</th></tr></thead><tbody>
+<tr><td>应用密钥无效 / invalid_client</td><td>检查 AppKey、SecretKey 来自同一个现有应用，复制时没有空格。不要填写 AppID 或 SignKey。</td></tr>
+<tr><td>授权用户数限额 / 20011</td><td>检查应用授权用户配额。复用应用不增加配额，重新注册手机设备也无法解决用户数限制。</td></tr>
+<tr><td>触发频控 / 20012</td><td>停止反复刷新，稍后再试；该版收到 20012 后会暂停接口调用约一小时。持续浏览需要足够的应用配额。</td></tr>
+<tr><td>目录超出范围 / 20020</td><td>确认原片根目录及索引目录处于应用获准的访问范围。新版使用官方目录列表和文件 ID 查询；如果仍返回此错误，应检查应用目录权限，不能靠填写路径获得权限。</td></tr><tr><td>接口权限不足 / 20013</td><td>检查应用状态及文件列表、查询文件信息、下载接口权限；按平台要求审核或申请权限。</td></tr>
+<tr><td>索引目录没有 index-*.json</td><td>检查手机索引目录和电脑是否一致，电脑是否真正显示“已同步”，以及网盘是否有发布文件。不能把照片目录填作索引目录。</td></tr>
+<tr><td>能看到照片名称，但缩略图 / 原图读不到</td><td>先检查 Wi-Fi 图片设置，再确认原片已备份、目录已授权、cloudPath 与实际路径完全一致。索引目录获授权不代表原片目录也有权限。</td></tr>
+<tr><td>原片未备份</td><td>手机按完整云端路径没有找到文件。展开照片后查看信息中的路径，使用现有备份流程补齐；再点击重试预览。索引同步成功不代表所有原片均已备份。</td></tr>
+<tr><td>云端文件大小与索引不符</td><td>检查原片备份是否尚未完成或被备份软件转码。手机不改用同名文件；应完成正确备份，再在电脑刷新并发布索引。</td></tr>
+<tr><td>百度没返回缩略图</td><td>可能是文件格式或接口权限问题。若原图下载获授权，可进入大图读取高清图；不能解码时会显示错误。</td></tr>
+<tr><td>新索引校验失败、版本不兼容</td><td>使用当前电脑端重新导出或发布 schemaVersion=2 索引，不要导入电脑内部工作库或手工截断的 JSON。旧手机索引保持可用。</td></tr>
+<tr><td>授权过期、续期失败</td><td>设置中重新连接百度网盘，随后刷新或重新导入索引。不要循环使用旧 refresh_token。</td></tr>
+<tr><td>锁屏后缩略图失败或高清状态停住</td><td>解锁并回到应用后，会取消旧请求并重试附近的图片，高清图重新按当前照片读取。若页面被系统回收，按“重新打开”恢复，连接和索引保留。仍重复出现时反馈应用版本、WebView 版本和完整提示。</td></tr>
+<tr><td>全图库缓存显示空间上限</td><td>释放手机空间后，在设置中继续缓存。已缓存的图片保留；普通滑动仍优先读取当前照片。</td></tr>
+<tr><td>地图打不开，但照片能看</td><td>检查手机网络、Android System WebView 和 MapTiler 服务。地图使用电脑端已有样式，地图网络问题不影响本机索引查询。</td></tr>
+<tr><td>看起来已连上，但仍是 35 张样例</td><td>蓝色提示栏显示“样例浏览”时属于演示。点击“退出样例”，再刷新索引。浏览样例不会覆盖手机真实索引。</td></tr>
+</tbody></table>
+<h3>第一次连接成功的判断标准</h3>
+<p>不要只看“授权成功”。应当逐项看到：<strong>刷新后显示真实照片数量 → 相册及批注与电脑一致 → 一张 JPEG 缩略图可见 → 展开照片后高清图显示成功 → 中文路径和不同年份照片都能读取。</strong>HEIF 请另外选一张真实文件验证。当前 Beta.5 的界面回归使用 35 张程序生成的风景插画，并覆盖 57 人合照的分批展示与姓名搜索。自动化检查使用合成数据及接口替身，不能证明真实百度读取速度或系统 API 行为。最新版的锁屏恢复、高清读取、两台设备迁移、HEIF 与在线地图仍待真实设备安装后的测试反馈。</p>
+</section>
+<h2>官方资料</h2>
+<ul>
+<li><a href="https://pan.baidu.com/union/doc/使用入门/接入授权/授权介绍/">百度：授权介绍</a>（个人应用数量、令牌续期和 refresh_token 轮换）</li>
+<li><a href="https://pan.baidu.com/union/doc/使用入门/权限与配额/">百度：权限与配额</a>（目录边界、应用状态及配额）</li>
+<li><a href="https://pan.baidu.com/union/doc/基础网盘服务/获取文件信息/查询文件信息/">百度：查询文件信息</a>（路径定位、缩略图和下载地址）</li>
+<li><a href="https://pan.baidu.com/union/doc/基础网盘服务/下载/">百度：下载</a>（dlink 时效、请求头和重定向）</li>
+</ul>
+<p class="muted">本文按 2026-10-12 获取的官方文档及 2026-10-13 的手机端实现编写。账户实际权限、配额和文件格式兼容性以实际连接结果为准。教程不要求输入百度账号密码到生活点滴；账号登录只发生在百度授权页面。</p>
+<p class="no-print"><a href="app/src/main/assets/index.html">打开生活点滴界面预览</a></p>
+</main></body></html>

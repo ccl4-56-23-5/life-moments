@@ -1,0 +1,8 @@
+.gradle/
+app/build/
+local.properties
+artifacts/
+app/src/main/assets/demo.json
+app/src/main/assets/maplibre-gl.js
+app/src/main/assets/maplibre-gl.css
+app/src/main/assets/guide-*.png
