@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="brand-title">
+  <title id="brand-title">生活点滴 · 点滴里的照片</title>
+  <defs>
+    <linearGradient id="blue" x1="64" y1="48" x2="440" y2="472" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2571ff"/><stop offset="1" stop-color="#22c6d9"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="144" cy="112" r="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fff" stop-opacity=".075"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="tile"><rect x="32" y="32" width="448" height="448" rx="112"/></clipPath>
+    <mask id="drop"><rect width="512" height="512" fill="#000"/>
+      <path d="M256 105 C240 131 200 162 174 194 C141 233 132 270 147 313 C163 363 205 397 256 399 C319 401 370 364 380 314 C391 262 367 225 337 191 C310 162 276 131 256 105 Z" fill="#fff"/>
+      <path d="M116 333 C176 296 198 267 220 279 C240 290 251 317 268 320 C284 323 299 295 319 299 C343 303 360 319 410 368 C410 414 410 438 410 440 C313 440 204 440 116 440 C116 412 116 367 116 333 Z" fill="#000"/>
+    </mask>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#blue)"/>
+    <rect x="32" y="32" width="448" height="448" rx="112" fill="url(#glow)"/>
+    <rect width="512" height="512" fill="#f9fcff" mask="url(#drop)"/>
+    <circle cx="309" cy="232" r="22" fill="#ffc174"/>
+  </g>
+</svg>
