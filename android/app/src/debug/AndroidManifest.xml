@@ -1,0 +1,10 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <instrumentation android:name="com.lifemoments.reader.ReaderDeviceProbe"
+        android:targetPackage="com.lifemoments.reader" android:label="LifeMoments window splash and cache QA" />
+    <instrumentation android:name="com.lifemoments.reader.ReaderCloudProbe"
+        android:targetPackage="com.lifemoments.reader" android:label="LifeMoments debug cloud verification" />
+    <instrumentation android:name="com.lifemoments.reader.ReaderNativeProbe"
+        android:targetPackage="com.lifemoments.reader" android:label="LifeMoments isolated native regression" />
+    <instrumentation android:name="com.lifemoments.reader.ReaderTransferProbe"
+        android:targetPackage="com.lifemoments.reader" android:label="LifeMoments encrypted LAN transfer fixtures" />
+</manifest>
