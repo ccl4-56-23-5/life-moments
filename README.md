@@ -4,14 +4,14 @@
 
 当前版本为 **Windows 0.3.0-beta.9** 和 **Android 0.1.0-beta.5**，均为个人测试版。
 
-## 下载与开始使用
+## 构建与开始使用
 
-在 [GitHub Releases](https://github.com/ccl4-56-23-5/life-moments/releases) 下载对应安装包。私有仓库的源码和下载页需要有访问权限的 GitHub 账号。
+当前公开仓库提供双端源码、配置样例和使用文档。需要安装时，可按 [Windows 构建说明](desktop/架构与构建说明.md) 或 [Android 构建说明](android/README.md) 自行构建。
 
-| 平台 | 安装包 | 运行环境 |
-| --- | --- | --- |
-| Windows | `生活点滴-安装程序-0.3.0-beta.9.exe` | Windows x64、.NET Framework 4.8、Microsoft Edge WebView2 Runtime |
-| Android | `生活点滴-安卓-0.1.0-beta.5.apk` | Android 9 或更新版本，支持手机和平板 |
+| 平台 | 运行环境 |
+| --- | --- |
+| Windows | Windows x64、.NET Framework 4.8、Microsoft Edge WebView2 Runtime |
+| Android | Android 9 或更新版本，支持手机和平板 |
 
 首次使用先在电脑设置中选择照片目录，整理并发布索引；再在手机设置中连接同一个百度应用，填写索引目录和原片根目录，点击“刷新索引”。例如，网盘中的 `数据备份/照片` 应填写为 `/数据备份/照片`。
 
